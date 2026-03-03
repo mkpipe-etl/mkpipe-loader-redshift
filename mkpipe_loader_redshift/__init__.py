@@ -1,5 +1,7 @@
 from mkpipe.spark import JdbcLoader
 
+JAR_PACKAGES = ['com.amazon.redshift:redshift-jdbc42:2.1.0.31']
+
 
 class RedshiftLoader(JdbcLoader, variant='redshift'):
     driver_name = 'redshift'
