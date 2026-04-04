@@ -6,6 +6,7 @@ JAR_PACKAGES = ['com.amazon.redshift:redshift-jdbc42:2.1.0.31']
 class RedshiftLoader(JdbcLoader, variant='redshift'):
     driver_name = 'redshift'
     driver_jdbc = 'com.amazon.redshift.jdbc42.Driver'
+    _dialect = 'redshift'
 
     def build_jdbc_url(self):
         url = (

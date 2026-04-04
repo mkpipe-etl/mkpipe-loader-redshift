@@ -44,6 +44,26 @@ pipelines:
 
 ---
 
+## Write Strategy
+
+Control how data is written to Redshift:
+
+```yaml
+      - name: public.events
+        target_name: public.stg_events
+        write_strategy: upsert       # append | replace | upsert | merge
+        write_key: [id]              # required for upsert/merge
+```
+
+| Strategy | Redshift Behavior |
+|---|---|
+| `append` | Plain `INSERT` via JDBC (default for incremental) |
+| `replace` | Drop and recreate table, then insert (default for full) |
+| `upsert` | `INSERT ... ON CONFLICT (write_key) DO UPDATE` via temp table |
+| `merge` | Same as upsert for Redshift |
+
+---
+
 ## Write Parallelism & Throughput
 
 ```yaml
@@ -73,6 +93,8 @@ pipelines:
 | `replication_method` | `full` / `incremental` | `full` | Replication strategy |
 | `batchsize` | int | `10000` | Rows per JDBC batch insert |
 | `write_partitions` | int | — | Coalesce DataFrame to N partitions before writing |
+| `write_strategy` | string | — | `append`, `replace`, `upsert`, `merge` |
+| `write_key` | list | — | Key columns for upsert/merge (required) |
 | `dedup_columns` | list | — | Columns used for `mkpipe_id` hash deduplication |
 | `tags` | list | `[]` | Tags for selective pipeline execution |
 | `pass_on_error` | bool | `false` | Skip table on error instead of failing |
